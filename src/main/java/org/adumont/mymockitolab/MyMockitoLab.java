@@ -7,6 +7,7 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.atMost;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -16,7 +17,9 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
 public class MyMockitoLab {
 
@@ -145,4 +148,22 @@ public class MyMockitoLab {
 		mockedList.clear();
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
+	public void verificationInOrder() {
+		List firstMock = mock(List.class);
+		List secondMock = mock(List.class);
+
+		// using mocks
+		firstMock.add("was called first");
+		secondMock.add("was called second");
+
+		// create inOrder object passing any mocks that need to be verified in
+		// order
+		InOrder inOrder = Mockito.inOrder(firstMock, secondMock);
+
+		// following will make sure that firstMock was called before secondMock
+		inOrder.verify(firstMock).add("was called first");
+		inOrder.verify(secondMock).add("was called second");
+	}
 }

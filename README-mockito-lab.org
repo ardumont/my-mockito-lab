@@ -1,0 +1,12 @@
+#+TITLE: Mockito-lab - Learning Mockito
+#+author: Antoine Romain Dumont
+#+STARTUP: indent
+#+STARTUP: hidestars odd
+
+* What's this ? 
+
+
+From Mockito's web site, "Mockito is a mocking framework that tastes
+really good.".
+I want some. So here are my tests from their documentation. 
+Nothing really interesting for anyone but me.

@@ -15,6 +15,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Before;
@@ -261,5 +262,29 @@ public class MyMockitoLab {
 
 		// following throws RuntimeException:
 		mockedList.clear();
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Test
+	public void spyingOnRealObject() {
+		List list = new LinkedList();
+		List spy = Mockito.spy(list);
+
+		// optionally, you can stub out some methods:
+		given(spy.size()).willReturn(100);
+
+		// using the spy calls real methods
+		spy.add("one");
+		spy.add("two");
+
+		// prints "one" - the first element of a list
+		System.out.println(spy.get(0));
+
+		// size() method was stubbed - 100 is printed
+		System.out.println(spy.size());
+
+		// optionally, you can verify
+		verify(spy).add("one");
+		verify(spy).add("two");
 	}
 }

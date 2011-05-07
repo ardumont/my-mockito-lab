@@ -2,29 +2,30 @@ package org.adumont.mymockitolab;
 
 //Let's import Mockito statically so that the code looks clearer
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.verify;
+import static org.mockito.MockitoAnnotations.initMocks;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 public class MyMockitoLab {
 
+	@SuppressWarnings("rawtypes")
+	@Mock
+	private List mockedList;
+
 	@Before
 	public void setup() {
-
+		initMocks(this);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
 	public void letsVerifySomeBehaviour() {
-
-		// mock creation
-		List<String> mockedList = mock(List.class);
-
 		// using mock object
 		mockedList.add("one");
 		mockedList.clear();
@@ -36,10 +37,6 @@ public class MyMockitoLab {
 
 	@Test(expected = RuntimeException.class)
 	public void howAboutSomeStubbing() {
-
-		// You can mock concrete classes, not only interfaces
-		LinkedList<String> mockedList = mock(LinkedList.class);
-
 		// stubbing
 		given(mockedList.get(0)).willReturn("first");
 		given(mockedList.get(1)).willThrow(new RuntimeException());
@@ -51,7 +48,7 @@ public class MyMockitoLab {
 		System.out.println(mockedList.get(999));
 
 		// following throws runtime exception
-		System.out.println(mockedList.get(1));
+		System.out.println(mockedList.get(1) + "\n");
 
 		// Although it is possible to verify a stubbed invocation, usually it's
 		// just redundant
@@ -62,6 +59,35 @@ public class MyMockitoLab {
 
 		// never reached because of the runtimeException
 		verify(mockedList).get(0);
+
 	}
+
+	@Test
+	public void matchersArgument() {
+		// stubbing using built-in anyInt() argument matcher
+		given(mockedList.get(anyInt())).willReturn("element");
+
+		// // stubbing using hamcrest (let's say isValid() returns your own
+		// // hamcrest matcher):
+		// given(mockedList.contains(argThat(new IsValidMatcherTest())))
+		// .willReturn("element");
+
+		// following prints "element"
+		System.out.println(mockedList.get(999));
+
+		// you can also verify using an argument matcher
+		verify(mockedList).get(anyInt());
+	}
+
+	// /**
+	// * Private
+	// */
+	// @SuppressWarnings({ "unused", "rawtypes" })
+	// private class IsValidMatcherTest extends ArgumentMatcher<List> {
+	// @Override
+	// public boolean matches(Object list) {
+	// return true;
+	// }
+	// }
 
 }

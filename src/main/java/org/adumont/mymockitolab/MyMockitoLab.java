@@ -193,4 +193,46 @@ public class MyMockitoLab {
 		// verify that other mocks were not interacted
 		verifyZeroInteractions(mockTwo, mockThree);
 	}
+
+	@Mock
+	private Toto totoMock;
+
+	private class Toto {
+		public Object someMethod(Object... args) {
+			// do things
+			return null;
+		}
+	}
+
+	@Test
+	public void stubbingConsecutiveCallMethod_1() {
+		given(totoMock.someMethod("some arg"))
+				.willThrow(new RuntimeException()).willReturn("foo");
+
+		// First call: throws runtime exception:
+		try {
+			totoMock.someMethod("some arg");
+		} catch (Exception e) {
+			assert true;
+		}
+
+		// Second call: prints "foo"
+		System.out.println(totoMock.someMethod("some arg"));
+
+		// Any consecutive call: prints "foo" as well (last stubbing wins).
+		System.out.println(totoMock.someMethod("some arg") + "\n");
+	}
+
+	@Test
+	public void stubbingConsecutiveCallMethod_2() {
+		given(totoMock.someMethod("some arg"))
+				.willReturn("one", "two", "three");
+
+		// will print "one"
+		System.out.println(totoMock.someMethod("some arg"));
+		// will print "two"
+		System.out.println(totoMock.someMethod("some arg"));
+		// will print "three-"
+		System.out.println(totoMock.someMethod("some arg"));
+	}
 }

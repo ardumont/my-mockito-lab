@@ -2,6 +2,7 @@ package org.adumont.mymockitolab;
 
 //Let's import Mockito statically so that the code looks clearer
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.atLeastOnce;
@@ -135,4 +136,13 @@ public class MyMockitoLab {
 		verify(mockedList, atLeast(2)).add("five times");
 		verify(mockedList, atMost(6)).add("five times");
 	}
+
+	@Test(expected = RuntimeException.class)
+	public void stubbingVoidMethodsWithExceptions() {
+		willThrow(new RuntimeException()).given(mockedList).clear();
+
+		// following throws RuntimeException:
+		mockedList.clear();
+	}
+
 }

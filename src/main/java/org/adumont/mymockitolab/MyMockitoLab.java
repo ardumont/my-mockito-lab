@@ -4,6 +4,7 @@ package org.adumont.mymockitolab;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.atMost;
@@ -21,6 +22,8 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 public class MyMockitoLab {
 
@@ -234,5 +237,21 @@ public class MyMockitoLab {
 		System.out.println(totoMock.someMethod("some arg"));
 		// will print "three-"
 		System.out.println(totoMock.someMethod("some arg"));
+	}
+
+	@Test
+	public void stubbingWithCallbacks() {
+		given(totoMock.someMethod(anyString())).willAnswer(
+				new Answer<Object>() {
+					@Override
+					public Object answer(InvocationOnMock invocation) {
+						Object[] args = invocation.getArguments();
+						// Object mock = invocation.getMock();
+						return "called with arguments: " + args;
+					}
+				});
+
+		// Following prints "called with arguments: foo"
+		System.out.println(totoMock.someMethod("foo"));
 	}
 }

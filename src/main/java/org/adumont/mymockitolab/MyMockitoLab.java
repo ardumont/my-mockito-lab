@@ -11,6 +11,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.util.List;
@@ -26,6 +27,16 @@ public class MyMockitoLab {
 	@SuppressWarnings("rawtypes")
 	@Mock
 	private List mockedList;
+
+	@SuppressWarnings("rawtypes")
+	@Mock
+	private List mockOne;
+
+	@Mock
+	private Object mockTwo;
+
+	@Mock
+	private Object mockThree;
 
 	@Before
 	public void setup() {
@@ -165,5 +176,21 @@ public class MyMockitoLab {
 		// following will make sure that firstMock was called before secondMock
 		inOrder.verify(firstMock).add("was called first");
 		inOrder.verify(secondMock).add("was called second");
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void verifyNoInteractionWithAMock() {
+		// using mocks - only mockOne is interacted
+		mockOne.add("one");
+
+		// ordinary verification
+		verify(mockOne).add("one");
+
+		// verify that method was never called on a mock
+		verify(mockOne, never()).add("two");
+
+		// verify that other mocks were not interacted
+		verifyZeroInteractions(mockTwo, mockThree);
 	}
 }

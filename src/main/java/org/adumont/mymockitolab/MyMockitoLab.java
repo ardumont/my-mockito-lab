@@ -254,4 +254,12 @@ public class MyMockitoLab {
 		// Following prints "called with arguments: foo"
 		System.out.println(totoMock.someMethod("foo"));
 	}
+
+	@Test(expected = RuntimeException.class)
+	public void familyOfMethodsToStubVoidMethods() {
+		willThrow(new RuntimeException()).given(mockedList).clear();
+
+		// following throws RuntimeException:
+		mockedList.clear();
+	}
 }

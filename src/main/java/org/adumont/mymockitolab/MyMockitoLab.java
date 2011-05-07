@@ -2,6 +2,7 @@ package org.adumont.mymockitolab;
 
 //Let's import Mockito statically so that the code looks clearer
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
@@ -286,5 +287,23 @@ public class MyMockitoLab {
 		// optionally, you can verify
 		verify(spy).add("one");
 		verify(spy).add("two");
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Test
+	public void warningOnSpyingMethodFinal() {
+		List list = new LinkedList();
+		List spy = Mockito.spy(list);
+
+		// Impossible: real method is called so spy.get(0) throws
+		// IndexOutOfBoundsException (the list is yet empty)
+		try {
+			given(spy.get(0)).willReturn("foo");
+		} catch (Exception e) {
+			// expected exception
+		}
+
+		// You have to use doReturn() for stubbing
+		willReturn("foo").given(spy).get(0);
 	}
 }

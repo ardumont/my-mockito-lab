@@ -16,6 +16,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -305,5 +307,15 @@ public class MyMockitoLab {
 
 		// You have to use doReturn() for stubbing
 		willReturn("foo").given(spy).get(0);
+	}
+
+	@Spy
+	private final List<String> spyAnnotationTestList = new ArrayList<String>();
+
+	@Test
+	public void testAnnotationSpy() {
+		spyAnnotationTestList.add("test");
+
+		verify(spyAnnotationTestList).add("test");
 	}
 }

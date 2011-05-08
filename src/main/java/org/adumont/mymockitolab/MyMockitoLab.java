@@ -1,11 +1,13 @@
 package org.adumont.mymockitolab;
 
 //Let's import Mockito statically so that the code looks clearer
+import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.atMost;
@@ -317,5 +319,46 @@ public class MyMockitoLab {
 		spyAnnotationTestList.add("test");
 
 		verify(spyAnnotationTestList).add("test");
+	}
+
+	/**
+	 * Class for test.
+	 */
+	private class Foo {
+
+		private class Bar {
+			public String getName() {
+				return null;
+			}
+		}
+
+		public Bar getBar() {
+			return null;
+		}
+	}
+
+	/**
+	 * Won't work because of the chained call of mock method.
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testDeepMockStubbing_fail() {
+		Foo mock = mock(Foo.class);
+
+		// note that we're stubbing a chain of methods here: getBar().getName()
+		given(mock.getBar().getName()).willReturn("deep");
+
+		// note that we're chaining method calls: getBar().getName()
+		assertEquals("deep", mock.getBar().getName());
+	}
+
+	@Test
+	public void testMockDeepStub_Success() {
+		Foo mock = mock(Foo.class, RETURNS_DEEP_STUBS);
+
+		// note that we're stubbing a chain of methods here: getBar().getName()
+		given(mock.getBar().getName()).willReturn("deep");
+
+		// note that we're chaining method calls: getBar().getName()
+		assertEquals("deep", mock.getBar().getName());
 	}
 }
